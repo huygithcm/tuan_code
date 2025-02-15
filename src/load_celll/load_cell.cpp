@@ -41,21 +41,19 @@ namespace main
             calibration_factor = reading_offset / weight_g_known;
             scale.set_scale(calibration_factor);
             scale.set_offset(offset); 
-   
         }
         void readLoadCell()
         {
+
             Serial.print("Khối lượng: ");
-            float weight_kg = scale.get_units(5);
-            if (weight_kg < 0)
+            int weight_g = scale.get_units(3);
+            if (weight_g < 0)
             {
-                weight_kg = 0;
+                weight_g = 0;
             }
-            Serial.println(weight_kg);
-            main::display::lcd.setCursor(0, 0);
-            main::display::lcd.print("Weight: ");
-            main::display::lcd.print(weight_kg, 2);
-            main::display::lcd.print(" kg");
+            Serial.println(weight_g);
+            snprintf(main::display::MENU[3], sizeof(main::display::MENU[3]), "WEIGHT  :  %i g", weight_g);
+       
        
         }
     }

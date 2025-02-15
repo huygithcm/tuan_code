@@ -4,57 +4,37 @@ namespace main
     namespace time
     {
         RTC_DS1307 rtc;
-        time thoiGian;
+        time time_set_on;
+        DateTime now;
         void readTime()
         {
             // Đọc giờ từ DS1307
-            DateTime now = rtc.now();
-            // thoiGian.hour = now.hour();
-            // thoiGian.minute = now.minute();
-            // thoiGian.second = now.second();
+            now = rtc.now();
             Serial.print(now.hour(), DEC);
             Serial.print(':');
             Serial.print(now.minute(), DEC);
             Serial.print(':');
             Serial.print(now.second(), DEC);
             Serial.println();
-            // Serial.print("Time: ");
-            // Serial.print(thoiGian.hour);
-            // Serial.print(":");
-            // Serial.print(thoiGian.minute);
-            // Serial.print(":");
-            // Serial.println(thoiGian.second);
+            snprintf(main::display::MENU[0], sizeof(main::display::MENU[0]), "TIME    :  %02d:%02d:%02d", now.hour(), now.minute(), now.second());
         }
-        void caculateOFF2()
+                    
+        void cacula_time_on(uint8_t hou, uint8_t min, uint8_t sec)
         {
-            //     // Tính toán giờ tắt cho hồ 1
-            //     int currentHour = thoiGian.hour;
-            //     int currentMinute = thoiGian.minute;
-            //     if (main::data::lake1 == 1 && currentHour == main::data::hourOn1 && currentMinute >= main::data::minuteOn1 && currentMinute < main::data::minuteOff1 && main::data::emergency == 1 && main::data::stateLake1 == 1)
-            //     {
-            //         // Serial.println("H  1 ho t  ng");
-            //         control_dc::controlDC1(main::data::lake1);
-            //     }
-            //     else
-            //     {
-            //         // Serial.println("H  1 t t");
-            //         control_dc::controlDC1(0);
-            //         main::control_dc::esc.writeMicroseconds(1000);
-            //     }
-            //     // Tính toán giờ tắt cho hồ 2
-            //     if (main::data::lake2 == 2 && currentHour == main::data::hourOn2 && currentMinute >= main::data::minuteOn2 && currentMinute < main::data::minuteOff2 && main::data::emergency == 1 && main::data::stateLake2 == 1)
-            //     {
-            //         // Serial.println("H  2 ho t  ng");
-            //         control_dc::controlDC2(main::data::lake2);
-            //     }
-            //     else
-            //     {
-            //         Serial.println("H  2 t t");
-            //         control_dc::controlDC2(0);
-            //         main::control_dc::esc.writeMicroseconds(1000);
-            //     }
-        }
 
+            DateTime time_on(now + TimeSpan(0, hou, min, sec));
+            time_set_on.hour = time_on.hour();
+            time_set_on.min = time_on.minute();
+            time_set_on.sec = time_on.second();
+            Serial.print("thoi gian bat tiep theo: ");
+            Serial.print(time_set_on.hour);
+            Serial.print(':');
+            Serial.print(time_set_on.min);
+            Serial.print(':');
+            Serial.print(time_set_on.sec);
+            Serial.println();
+            // snprintf(display::run_mode[2], 20, "CYCLE:  %02d:%02d:%02d   ", time_on.hour(), time_on.minute(), time_on.second());
+        }
         void setupds1307()
         {
 
@@ -81,6 +61,7 @@ namespace main
                 // January 21, 2014 at 3am you would call:
                 // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
             }
+            rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
         }
 
         int bcd2dec(byte num)
