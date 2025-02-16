@@ -10,13 +10,17 @@ namespace main
         {
             // Đọc giờ từ DS1307
             now = rtc.now();
+            main::action::now_seconds = now.second();
+            snprintf(main::display::MENU[0], sizeof(main::display::MENU[0]), "TIME    :  %02d:%02d:%02d", now.hour(), now.minute(), now.second());
+        }
+        void printTime()
+        {
             Serial.print(now.hour(), DEC);
             Serial.print(':');
             Serial.print(now.minute(), DEC);
             Serial.print(':');
             Serial.print(now.second(), DEC);
             Serial.println();
-            snprintf(main::display::MENU[0], sizeof(main::display::MENU[0]), "TIME    :  %02d:%02d:%02d", now.hour(), now.minute(), now.second());
         }
                     
         void cacula_time_on(uint8_t hou, uint8_t min, uint8_t sec)

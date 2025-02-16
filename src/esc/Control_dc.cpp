@@ -12,6 +12,43 @@ namespace main
         unsigned long previousMicros = 0;
         unsigned long currentMicros = 0;
         const long interval = 7000;
+        uint8_t ao_cho_an = 1;
+        uint8_t stepvalue = 0;
+
+        void control_step_motor()
+        {
+            Serial.println(ao_cho_an);
+            
+            if (ao_cho_an == 1)
+            {
+                
+                if (digitalRead(CTHT2) != LOW &&  stepvalue < 50)
+                {
+                    digitalWrite(DIR, LOW);
+                    digitalWrite(PUL, !digitalRead(PUL)); 
+                }
+                else
+                {
+                    digitalWrite(DIR, HIGH);
+                    digitalWrite(PUL, !digitalRead(PUL));
+                }
+            }
+
+            if (ao_cho_an == 2)
+            {
+
+                if (digitalRead(CTHT1) != LOW)
+                {
+                    digitalWrite(DIR, LOW);
+                    digitalWrite(PUL, !digitalRead(PUL));
+                }
+                else
+                {
+                    digitalWrite(DIR, HIGH);
+                    digitalWrite(PUL, !digitalRead(PUL));
+                }
+            }
+        }
 
         void setupBLDC()
         {
@@ -21,7 +58,7 @@ namespace main
         }
         void setup()
         {
-         
+
             digitalWrite(DIR, HIGH);
             while (digitalRead(CTHT2) != LOW)
             {
@@ -42,105 +79,7 @@ namespace main
             Serial.println("Setup home done!");
             main::display::lcd.setCursor(0, 3);
             main::display::lcd.print("Setup home done!");
-            
         }
-
-
-        // void controlDC1(int lake1)
-        // {
-        //     if (lake1 == 0)
-        //     {
-        //         digitalWrite(MF, HIGH);
-        //         digitalWrite(RULO_PIN, LOW);
-        //     }
-        //     else if (lake1 == 1)
-        //     {
-        //         digitalWrite(MF, LOW);
-        //         digitalWrite(DIR, HIGH);
-
-        //         for (int i = 0; i < (homeSteps - buoclui); i++)
-        //         {
-        //             unsigned long currentMicros = micros();
-        //             if (currentMicros - previousMicros >= interval)
-        //             {
-        //                 digitalWrite(RULO_PIN, HIGH);
-        //                 esc.writeMicroseconds(speedBLDC);
-        //                 digitalWrite(PUL, HIGH);
-        //                 previousMicros = currentMicros;
-        //             }
-        //             else
-        //             {
-        //                 digitalWrite(RULO_PIN, LOW);
-        //                 digitalWrite(PUL, LOW);
-        //             }
-        //         }
-        //         digitalWrite(DIR, LOW);
-        //         for (int i = 0; i < homeSteps; i++)
-        //         {
-        //             unsigned long currentMicros = micros();
-        //             if (currentMicros - previousMicros >= interval)
-        //             {
-        //                 digitalWrite(RULO_PIN, HIGH);
-        //                 esc.writeMicroseconds(speedBLDC);
-        //                 digitalWrite(PUL, HIGH);
-        //                 previousMicros = currentMicros;
-        //             }
-        //             else
-        //             {
-        //                 digitalWrite(RULO_PIN, LOW);
-        //                 digitalWrite(PUL, LOW);
-        //             }
-        //         }
-        //     }
-        // }
-
-        // void controlDC2(int lake2)
-        // {
-          
-        //     if (lake2 == 0)
-        //     {
-        //         digitalWrite(MF, HIGH);
-        //         digitalWrite(RULO_PIN, LOW);
-        //     }
-        //     if (lake2 == 2)
-        //     {
-        //         digitalWrite(MF, LOW);
-        //         digitalWrite(DIR, LOW);
-        //         for (int i = 0; i < homeSteps ; i++)
-        //         {
-        //             unsigned long currentMicros = micros();
-        //             if (currentMicros - previousMicros >= interval)
-        //             {
-        //                 digitalWrite(RULO_PIN, HIGH);
-        //                 esc.writeMicroseconds(speedBLDC);
-        //                 digitalWrite(PUL, HIGH);
-        //                 previousMicros = currentMicros;
-        //             }
-        //             else
-        //             {
-        //                 digitalWrite(RULO_PIN, LOW);
-        //                 digitalWrite(PUL, LOW);
-        //             }
-        //         }
-        //         digitalWrite(DIR, HIGH);
-        //         for (int i = 0; i < (homeSteps - buoclui); i++)
-        //         {
-        //             unsigned long currentMicros = micros();
-        //             if (currentMicros - previousMicros >= interval)
-        //             {
-        //                 digitalWrite(RULO_PIN, HIGH);
-        //                 esc.writeMicroseconds(speedBLDC);
-        //                 digitalWrite(PUL, HIGH);
-        //                 previousMicros = currentMicros;
-        //             }
-        //             else
-        //             {
-        //                 digitalWrite(RULO_PIN, LOW);
-        //                 digitalWrite(PUL, LOW);
-        //             }
-        //         }
-        //     }
-        // }
     }
 
 }

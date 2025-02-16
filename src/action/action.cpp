@@ -4,11 +4,12 @@ namespace main
     namespace action
     {
 
-        unsigned long previousMillis = 0;
-        unsigned long currentMillis = 0;
+        uint8_t now_seconds = 0, last_seconds = 0, previousMillis = 0, currentMillis = 0;
+        state mode = WAIT;
         void setup()
         {
-            Serial.begin(115200);
+            Serial.begin(9600);
+
             pinMode(PUL, OUTPUT);
             pinMode(DIR, OUTPUT);
             pinMode(MF, OUTPUT);
@@ -24,23 +25,31 @@ namespace main
             digitalWrite(TRIAC_GATE_PIN, LOW);
 
             main::display::setupLCD();
-            main::control_dc::setup();
-            main::control_dc::setupBLDC();
+
+            // main::control_dc::setup();
+            // main::control_dc::setupBLDC();
             main::load_cell::setupLoadCell();
             main::time::setupds1307();
-            currentMillis = millis();
+            main::data::setup();
         }
         void loop()
         {
-            currentMillis = millis();
-            if (currentMillis - previousMillis > 1000)
+            main::time::readTime();
+            if (Serial2.available() > 0)
             {
-                main::load_cell::readLoadCell();
-                main::time::readTime();
-                main::display::displayLCD();
-                previousMillis = currentMillis;
+                main::data::serialEvent();
             }
-
+            if (now_seconds != last_seconds)
+            {
+                main::display::displayLCD();
+                main::time::printTime();
+                main::load_cell::readLoadCell();
+                last_seconds = now_seconds;
+            }
+            if (main::data::stringComplete)
+            {
+                main::data::getData();
+            }
         }
 
     }
