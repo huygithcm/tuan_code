@@ -8,6 +8,8 @@
 #include <EEPROM.h>
 #include <ArduinoJson.h>
 #include <SHT31.h>
+#include <AccelStepper.h>
+// #include <AFMotor.h>
 
 #define ESC_PIN 7
 #define PUL 10
@@ -49,7 +51,9 @@ namespace main
     }
     namespace control_dc
     {
+        
         extern Servo esc;
+        extern AccelStepper stepper;
         void setup();
         void setupBLDC();
         void control_step_motor_a1();

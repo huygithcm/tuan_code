@@ -6,7 +6,9 @@ namespace main
 
         uint8_t now_seconds = 0, last_seconds = 0, currentMillis = 0;
         state mode = WAIT;
-    
+        unsigned long previousMillis = 0;
+        bool state_step;
+
         void setup()
         {
             Serial.begin(9600);
@@ -26,22 +28,18 @@ namespace main
             digitalWrite(TRIAC_GATE_PIN, LOW);
 
             main::display::setupLCD();
-            // main::control_dc::setup();
+            main::control_dc::setup();
             main::control_dc::setupBLDC();
             main::load_cell::setupLoadCell();
             main::time::setupds1307();
             main::data::setup();
-      
+            // previousMillis = millis();
+            // state_step = true;
         }
         void loop()
         {
             main::time::readTime();
-                
-
-            // if((unsigned long) (millis()  - previousMillis >= 1000))
-            // {
-            //     previousMillis = millis();
-            // }
+            main::control_dc::stepper.run(); // Không chặn chương trình, vẫn cho phép chạy các lệnh khác
             if (Serial2.available() > 0)
             {
                 main::data::serialEvent();
@@ -51,7 +49,17 @@ namespace main
                 main::display::displayLCD();
                 main::time::printTime();
                 main::load_cell::readLoadCell();
-                // main::control_dc::control_step_motor_a1();
+                long position = main::control_dc::stepper.currentPosition();
+                Serial.println(position);
+                if(position >= -50)
+                {   
+                    main::control_dc::stepper.moveTo(-5); // Di chuyển đến vị trí 2000 bước
+                }
+                if(position == -5)
+                {   
+                    main::control_dc::stepper.moveTo(-50); // Di chuyển đến vị trí 2000 bước
+                }
+
                 last_seconds = now_seconds;
             }
             if (main::data::stringComplete)
