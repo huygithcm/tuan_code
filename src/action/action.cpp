@@ -4,8 +4,9 @@ namespace main
     namespace action
     {
 
-        uint8_t now_seconds = 0, last_seconds = 0, previousMillis = 0, currentMillis = 0;
+        uint8_t now_seconds = 0, last_seconds = 0, currentMillis = 0;
         state mode = WAIT;
+    
         void setup()
         {
             Serial.begin(9600);
@@ -25,16 +26,22 @@ namespace main
             digitalWrite(TRIAC_GATE_PIN, LOW);
 
             main::display::setupLCD();
-
             // main::control_dc::setup();
-            // main::control_dc::setupBLDC();
+            main::control_dc::setupBLDC();
             main::load_cell::setupLoadCell();
             main::time::setupds1307();
             main::data::setup();
+      
         }
         void loop()
         {
             main::time::readTime();
+                
+
+            // if((unsigned long) (millis()  - previousMillis >= 1000))
+            // {
+            //     previousMillis = millis();
+            // }
             if (Serial2.available() > 0)
             {
                 main::data::serialEvent();
@@ -44,6 +51,7 @@ namespace main
                 main::display::displayLCD();
                 main::time::printTime();
                 main::load_cell::readLoadCell();
+                // main::control_dc::control_step_motor_a1();
                 last_seconds = now_seconds;
             }
             if (main::data::stringComplete)

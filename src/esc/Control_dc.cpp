@@ -3,58 +3,71 @@ namespace main
 {
     namespace control_dc
     {
-        /**
-         * @brief Khai báo các chân cho mô tơ bước
-         *
-         */
+
         Servo esc;
-        int homeSteps = 50;
         unsigned long previousMicros = 0;
         unsigned long currentMicros = 0;
         const long interval = 7000;
         uint8_t ao_cho_an = 1;
-        uint8_t stepvalue = 0;
+        uint8_t homeSteps = 50;
+        uint8_t save_step = 0;
+        bool direction = false;
 
-        void control_step_motor()
+        void control_step_motor_a1()
         {
-            Serial.println(ao_cho_an);
             
-            if (ao_cho_an == 1)
-            {
-                
-                if (digitalRead(CTHT2) != LOW &&  stepvalue < 50)
+                if (digitalRead(CTHT2) != LOW && direction == true) // chạy theo chiều dương.
                 {
                     digitalWrite(DIR, LOW);
                     digitalWrite(PUL, !digitalRead(PUL)); 
+                    save_step++;
+                    if(save_step == homeSteps)
+                    {
+                        direction = false;
+                    }
                 }
-                else
+                if (digitalRead(CTHT2) != LOW && direction == false)
                 {
                     digitalWrite(DIR, HIGH);
                     digitalWrite(PUL, !digitalRead(PUL));
+                    save_step--;
+                    if(save_step == 0)
+                    {
+                        direction = true;
+                    }
                 }
-            }
-
-            if (ao_cho_an == 2)
-            {
-
-                if (digitalRead(CTHT1) != LOW)
+                if (digitalRead(CTHT2) == LOW)
                 {
-                    digitalWrite(DIR, LOW);
-                    digitalWrite(PUL, !digitalRead(PUL));
+                    save_step=0;
+                    direction = true;
                 }
-                else
-                {
-                    digitalWrite(DIR, HIGH);
-                    digitalWrite(PUL, !digitalRead(PUL));
-                }
-            }
+                // Serial.print("Dang chay: ");
+                // Serial.println(save_step);
         }
+        void control_step_motor_a2()
+        {
+          
 
+                // if (digitalRead(CTHT1) == LOW)
+                // {
+                //     digitalWrite(DIR, LOW);
+                //     digitalWrite(PUL, !digitalRead(PUL)); 
+                //     stepvalue = 0;
+                // }
+                // else if (digitalRead(CTHT1) != LOW)
+                // {
+                //     digitalWrite(DIR, HIGH);
+                //     digitalWrite(PUL, !digitalRead(PUL));
+                //     stepvalue = 0;
+                // }
+            
+        }
         void setupBLDC()
         {
             esc.attach(ESC_PIN);
             esc.writeMicroseconds(SETUP_BLDC);
             delay(2000);
+            esc.writeMicroseconds(1300);
         }
         void setup()
         {

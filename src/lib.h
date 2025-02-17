@@ -52,6 +52,7 @@ namespace main
         extern Servo esc;
         void setup();
         void setupBLDC();
+        void control_step_motor_a1();
 
     }
     namespace display
