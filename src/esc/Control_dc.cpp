@@ -17,43 +17,21 @@ namespace main
 
         void control_step_motor_a1()
         {
-
-            if (digitalRead(CTHT2) == LOW)
-            {
-                digitalWrite(DIR, LOW);
+            if (main::control_dc::stepper.currentPosition() == -200) {
+                main::control_dc::stepper.moveTo(-50); // Di chuyển đến vị trí 2000 bước
             }
-            else if (digitalRead(CTHT2) != LOW)
-            {
-                digitalWrite(DIR, HIGH);
+            if (main::control_dc::stepper.currentPosition() == -50) {
+                main::control_dc::stepper.moveTo(-200); // Di chuyển đến vị trí 2000 bước
             }
-
-            // Serial.print("Dang chay: ");
-            // Serial.println(save_step);
         }
         void control_step_motor_a2()
         {
-
-            digitalWrite(MF, LOW);
-            if (digitalRead(CTHT2) == LOW)
-            {
-                digitalWrite(DIR, LOW);
+            if (main::control_dc::stepper.currentPosition() == -70) {
+                main::control_dc::stepper.moveTo(-100); // Di chuyển đến vị trí 2000 bước
             }
-            else if (digitalRead(CTHT2) != LOW)
-            {
-                digitalWrite(DIR, HIGH);
+            if (main::control_dc::stepper.currentPosition() == -100) {
+                main::control_dc::stepper.moveTo(-70); // Di chuyển đến vị trí 2000 bước
             }
-            // if (digitalRead(CTHT1) == LOW)
-            // {
-            //     digitalWrite(DIR, LOW);
-            //     digitalWrite(PUL, !digitalRead(PUL));
-            //     stepvalue = 0;
-            // }
-            // else if (digitalRead(CTHT1) != LOW)
-            // {
-            //     digitalWrite(DIR, HIGH);
-            //     digitalWrite(PUL, !digitalRead(PUL));
-            //     stepvalue = 0;
-            // }
         }
         void setupBLDC()
         {
@@ -61,50 +39,25 @@ namespace main
             esc.writeMicroseconds(SETUP_BLDC);
             delay(2000);
             // esc.writeMicroseconds(1600);
+            digitalWrite(MF, LOW);
         }
         void setup()
         {
-            stepper.setMaxSpeed(2000);
-            stepper.setAcceleration(1500);
-            // stepper.setMaxSpeed(500);
-            // stepper.setAcceleration(200);
-            
+            stepper.setMaxSpeed(7000);
+            stepper.setAcceleration(5000);
             // Di chuyển về home từ từ
             Serial.println("Homing...");
-            stepper.setSpeed(300);  // Hướng về công tắc home
+            stepper.setSpeed(500);  // Hướng về công tắc home
+
             while (digitalRead(CTHT2) != LOW) {
                 stepper.runSpeed(); // Chạy với tốc độ cố định
             }
-            
             stepper.setCurrentPosition(0);  // Đặt vị trí hiện tại là home (0)
+            // stepper.move(-55); // Di chuyển đến vị trí 2000 bước
             Serial.println("Home set!");
-            stepper.moveTo(-70); // Di chuyển đến vị trí 2000 bước
-            // digitalWrite(MF, HIGH);
-            // pul_step.attach(PUL);
-            // pul_step.writeMicroseconds(5000);
-            // digitalWrite(MF, LOW);
-            // digitalWrite(DIR, HIGH);
-
-            // while (digitalRead(CTHT2) != LOW)
-            // {
-            //     digitalWrite(DIR, HIGH);
-
-            //     // digitalWrite(MF, HIGH);
-            // }
-            // digitalWrite(DIR, LOW);
-            // delay(1000);
-            // digitalWrite(MF, HIGH);
-            // pul_step.writeMicroseconds(0);
-            // digitalWrite(DIR, HIGH);
-            // quay về nhà yêu dấu
-            // digitalWrite(DIR, HIGH);
-            // for (long i = 0; i < homeSteps; i++)
-            // {
-            //     digitalWrite(PUL, HIGH);
-            //     delayMicroseconds(7000);
-            //     digitalWrite(PUL, LOW);
-            //     delayMicroseconds(7000);
-            // }
+            stepper.moveTo(-50); // Di chuyển đến vị trí 2000 bước
+            stepper.runToPosition();
+           
             Serial.println("Setup home done!");
             main::display::lcd.setCursor(0, 3);
             main::display::lcd.print("Setup home done!");

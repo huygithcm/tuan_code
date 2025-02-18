@@ -40,7 +40,9 @@ namespace main
         extern uint8_t now_seconds, last_seconds;
         enum state
         {
-            RUN,
+            RUN_A1,
+            RUN_A2,
+            RUN_A12,
             STOP,
             WAIT
         };
@@ -87,14 +89,16 @@ namespace main
     namespace time
     {
         extern RTC_DS1307 rtc;
+        
         typedef struct
         {
             uint8_t hour;
             uint8_t min;
             uint8_t sec;
         } time;
+
         extern DateTime now;
-        extern time thoiGian;
+        extern time time_on_1, time_on_2;
         void readTime();
         void setupds1307();
         void setTime(byte hr, byte min, byte sec);

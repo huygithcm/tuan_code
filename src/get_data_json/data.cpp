@@ -44,11 +44,11 @@ namespace main
 
                     if (valuedata == 1)
                     {
-                       main::action::mode = main::action::RUN;
+                    //    main::action::mode = main::action::RUN;
                     }
                     else
                     {
-                        main::action::mode= main::action::STOP;
+                        // main::action::mode= main::action::STOP;
                     }
                 }
 
