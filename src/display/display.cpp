@@ -8,8 +8,8 @@ namespace main
         char MENU[4][20] = 
         {
             "TIME    :          ",  
-            "ON TIME :          ",
-            "OFF TIME:          ",
+            "ON TIME 1:         ",
+            "ON TIME 2:         ",
             "WEIGHT  :          ",
         };
         void setupLCD()

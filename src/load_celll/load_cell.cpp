@@ -9,6 +9,7 @@ namespace main
         float weight_g_known = 10000;
         long reading_offset = -330299;
         long offset = -930182;
+        int weight_sen = 0;
 
         void calibrateLoadCell()
         {
@@ -51,6 +52,7 @@ namespace main
             {
                 weight_g = 0;
             }
+            weight_sen = weight_g;
             Serial.println(weight_g);
             snprintf(main::display::MENU[3], sizeof(main::display::MENU[3]), "WEIGHT  :  %i g", weight_g);
        

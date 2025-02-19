@@ -20,7 +20,8 @@
 #define DT_PIN 65
 #define SCK_PIN 64
 #define BUTTON_PIN 22
-#define speedBLDC 1200
+#define SPEED_BLDC 1500
+#define OFF_BLDC 1000
 #define SETUP_BLDC 1000
 #define LOADCELL_DOUT_PIN 65
 #define LOADCELL_SCK_PIN 64
@@ -32,6 +33,13 @@
 #define ADDRESS_EEPROM_OFFSET 0
 #define ADDRESS_EEPROM_READING_OFFSET 0
 
+#define POS_HOME -300
+#define POS_A1_1 -250
+#define POS_A1_0 -60
+
+#define POS_A2_1 -800
+#define POS_A2_0 -550
+
 namespace main
 {
     namespace action
@@ -40,10 +48,12 @@ namespace main
         extern uint8_t now_seconds, last_seconds;
         enum state
         {
-            RUN_A1,
-            RUN_A2,
-            RUN_A12,
             STOP,
+            RUN,
+            INPROCESS_1,
+            INPROCESS_2,
+            INPROCESS_3,
+            MODE_2_AO,
             WAIT
         };
 
@@ -56,9 +66,20 @@ namespace main
         
         extern Servo esc;
         extern AccelStepper stepper;
+        enum RUN_STATE
+        {
+            RUN,
+            STOP,
+            IN_PCSS,
+            DONE,
+            WAIT
+        };
+        extern RUN_STATE run_state_a1;
+        extern RUN_STATE run_state_a2;
         void setup();
         void setupBLDC();
         void control_step_motor_a1();
+        void control_step_motor_a2();
 
     }
     namespace display
@@ -72,6 +93,7 @@ namespace main
     namespace load_cell
     {
         extern HX711 scale;
+        extern  int weight_sen;
         void calibrateLoadCell();
         void setupLoadCell();
         void readLoadCell();
@@ -98,10 +120,11 @@ namespace main
         } time;
 
         extern DateTime now;
-        extern time time_on_1, time_on_2;
+        extern time time_on_1, time_on_2, time_off_1, time_off_2, time_delay;
         void readTime();
         void setupds1307();
         void setTime(byte hr, byte min, byte sec);
+        void cacula_time_off(uint8_t hou, uint8_t min, uint8_t sec, int set_timer);
         void printTime();
     }
 }

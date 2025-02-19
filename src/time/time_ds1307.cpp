@@ -4,8 +4,10 @@ namespace main
     namespace time
     {
         RTC_DS1307 rtc;
-        time time_set_on;
+
+        time time_on_1, time_on_2, time_off_1, time_off_2, time_off_3, time_delay;
         DateTime now;
+
         void readTime()
         {
             // Đọc giờ từ DS1307
@@ -22,20 +24,52 @@ namespace main
             Serial.print(now.second(), DEC);
             Serial.println();
         }
-                    
-        void cacula_time_on(uint8_t hou, uint8_t min, uint8_t sec)
+
+        void cacula_time_off(uint8_t hou, uint8_t min, uint8_t sec, int set_timer)
+        {
+            if (set_timer == 1)
+            {
+                DateTime time_on(now + TimeSpan(0, hou, min, sec));
+                time_off_1.hour = time_on.hour();
+                time_off_1.min = time_on.minute();
+                time_off_1.sec = time_on.second();
+                Serial.print("TIME OFF 1 : ");
+                Serial.print(time_off_1.hour);
+                Serial.print(':');
+                Serial.print(time_off_1.min);
+                Serial.print(':');
+                Serial.print(time_off_1.sec);
+                Serial.println();
+            }
+            if (set_timer == 2)
+            {
+                DateTime time_on(now + TimeSpan(0, hou, min, sec));
+                time_off_2.hour = time_on.hour();
+                time_off_2.min = time_on.minute();
+                time_off_2.sec = time_on.second();
+                Serial.print("TIME OFF 2 : ");
+                Serial.print(time_off_2.hour);
+                Serial.print(':');
+                Serial.print(time_off_2.min);
+                Serial.print(':');
+                Serial.print(time_off_2.sec);
+                Serial.println();
+            }
+           
+        }
+        void cacula_time_off_2(uint8_t hou, uint8_t min, uint8_t sec)
         {
 
             DateTime time_on(now + TimeSpan(0, hou, min, sec));
-            time_set_on.hour = time_on.hour();
-            time_set_on.min = time_on.minute();
-            time_set_on.sec = time_on.second();
+            time_off_2.hour = time_on.hour();
+            time_off_2.min = time_on.minute();
+            time_off_2.sec = time_on.second();
             Serial.print("thoi gian bat tiep theo: ");
-            Serial.print(time_set_on.hour);
+            Serial.print(time_off_2.hour);
             Serial.print(':');
-            Serial.print(time_set_on.min);
+            Serial.print(time_off_2.min);
             Serial.print(':');
-            Serial.print(time_set_on.sec);
+            Serial.print(time_off_2.sec);
             Serial.println();
             // snprintf(display::run_mode[2], 20, "CYCLE:  %02d:%02d:%02d   ", time_on.hour(), time_on.minute(), time_on.second());
         }
